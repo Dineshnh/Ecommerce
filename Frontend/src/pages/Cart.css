@@ -1,0 +1,61 @@
+/* Page wrapper */
+.cart-page {
+  width: 90%;
+  margin: auto;
+  min-height: 100vh;
+}
+
+/* Title */
+.cart-page h2 {
+  text-align: center;
+  margin: 30px 0;
+  color: #333;
+  font-size: 28px;
+}
+
+/* Cart grid (same feel as product grid) */
+.cart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* Card (same as Products page) */
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+}
+
+/* Text styling */
+.card p {
+  font-size: 16px;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+/* Highlight product ID */
+.card p:first-child {
+  font-weight: bold;
+  color: #1e3a8a;
+}
+
+/* Quantity style */
+.card p:nth-child(2) {
+  font-weight: 600;
+  color: #16a34a;
+}
+
+/* Empty cart style (optional future use) */
+.empty-cart {
+  text-align: center;
+  margin-top: 50px;
+  color: #777;
+  font-size: 18px;
+}
