@@ -1,4 +1,4 @@
-.admin-page {
+/* .admin-page {
   width: 90%;
   margin: auto;
   min-height: 100vh;
@@ -53,4 +53,85 @@
 .orders {
   border-top: 5px solid #f59e0b;
   color: #f59e0b;
+} */
+
+.admin-page{
+
+    width:90%;
+    margin:auto;
+    padding:30px;
+
+}
+
+
+.admin-page h1{
+
+    text-align:center;
+    color:#1e3a8a;
+
+}
+
+
+.product-form{
+
+    width:400px;
+    margin:40px auto;
+    padding:25px;
+
+    background:white;
+
+    border-radius:12px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+
+}
+
+
+.product-form input,
+.product-form textarea{
+
+
+    width:100%;
+
+    padding:12px;
+
+    margin-bottom:15px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+}
+
+
+.product-form textarea{
+
+    height:100px;
+
+}
+
+
+.product-form button{
+
+    width:100%;
+
+    padding:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+}
+
+
+.product-form button:hover{
+
+    background:#1d4ed8;
+
 }

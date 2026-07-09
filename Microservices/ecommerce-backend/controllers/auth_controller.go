@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"ecommerce-backend/config"
@@ -20,6 +21,8 @@ func Register(c *gin.Context) {
 		return
 	}
 
+	fmt.Println("Original Password:", user.Password)
+
 	hashedPassword, err := utils.HashPassword(user.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -27,6 +30,7 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
+	fmt.Println("Generated Hash:", hashedPassword)
 
 	user.Password = hashedPassword
 	user.Role = "CUSTOMER"
@@ -43,37 +47,129 @@ func Register(c *gin.Context) {
 	})
 }
 
+// func Login(c *gin.Context) {
+// 	var input struct {
+// 		Email    string `json:"email"`
+// 		Password string `json:"password"`
+// 	}
+
+// 	if err := c.ShouldBindJSON(&input); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{
+// 			"error":  "Invalid JSON input",
+// 			"detail": err.Error(),
+// 		})
+// 		return
+// 	}
+
+// 	var user models.User
+
+// 	result := config.DB.Where("email = ?", input.Email).First(&user)
+// 	if result.Error != nil {
+// 		c.JSON(http.StatusUnauthorized, gin.H{
+// 			"message": "Invalid Email or Password",
+// 		})
+// 		return
+// 	}
+
+// 	if !utils.CheckPasswordHash(input.Password, user.Password) {
+// 		c.JSON(http.StatusUnauthorized, gin.H{
+// 			"message": "Invalid Email or Password",
+// 		})
+// 		return
+// 	}
+
+// 	token, err := utils.GenerateToken(user.ID, user.Role)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{
+// 			"error": "Failed to generate token",
+// 		})
+// 		return
+// 	}
+
+// 	c.JSON(http.StatusOK, gin.H{
+// 		"message": "Login Successful",
+// 		"token":   token,
+// 		"user": gin.H{
+// 			"id":   user.ID,
+// 			"name": user.Name,
+// 			"role": user.Role,
+// 		},
+// 	})
+// }
+
 func Login(c *gin.Context) {
+
 	var input struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
 
+	// 🔍 DEBUG: print raw request
+	fmt.Println("=== LOGIN REQUEST ===")
+	fmt.Println("Email input:", input.Email)
+
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, gin.H{
+		fmt.Println("JSON ERROR:", err)
+		c.JSON(http.StatusBadRequest, gin.H{
 			"error":  "Invalid JSON input",
 			"detail": err.Error(),
 		})
 		return
 	}
 
+	fmt.Println("Parsed Email:", input.Email)
+	fmt.Println("Parsed Password:", input.Password)
+
 	var user models.User
 
 	result := config.DB.Where("email = ?", input.Email).First(&user)
+
+	// 🔍 DEBUG DB RESULT
 	if result.Error != nil {
-		c.JSON(401, gin.H{"message": "Invalid Email or Password"})
+		fmt.Println("DB ERROR:", result.Error)
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Invalid Email or Password",
+		})
 		return
 	}
 
-	if !utils.CheckPasswordHash(input.Password, user.Password) {
-		c.JSON(401, gin.H{"message": "Invalid Email or Password"})
+	fmt.Println("USER FOUND IN DB")
+	fmt.Println("DB Email:", user.Email)
+	fmt.Println("DB Password (HASH):", user.Password)
+	fmt.Println("DB Role:", user.Role)
+
+	// 🔍 PASSWORD CHECK DEBUG
+	match := utils.CheckPasswordHash(input.Password, user.Password)
+	fmt.Println("PASSWORD MATCH RESULT:", match)
+
+	if !match {
+		fmt.Println("PASSWORD INCORRECT")
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Invalid Email or Password",
+		})
 		return
 	}
 
-	token, _ := utils.GenerateToken(user.ID, user.Role)
-	c.JSON(200, gin.H{
+	// token generation
+	token, err := utils.GenerateToken(user.ID, user.Role)
+	if err != nil {
+		fmt.Println("TOKEN ERROR:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to generate token",
+		})
+		return
+	}
+
+	fmt.Println("LOGIN SUCCESS for user:", user.Email)
+
+	c.JSON(http.StatusOK, gin.H{
 		"message": "Login Successful",
 		"token":   token,
+		"user": gin.H{
+			"id":   user.ID,
+			"name": user.Name,
+			"role": user.Role,
+		},
 	})
 }
 

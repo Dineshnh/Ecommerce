@@ -1,16 +1,33 @@
 import { Routes, Route } from "react-router-dom";
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Products from "./pages/Products";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
+import Admin from "./pages/Admin";
+
 import PrivateRoute from "./components/PrivateRoute";
+import AdminRoute from "./components/AdminRoute";
+
 
 function App() {
+
   return (
+
     <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+
+      <Route 
+        path="/" 
+        element={<Login />} 
+      />
+
+
+      <Route 
+        path="/register" 
+        element={<Register />} 
+      />
+
 
       <Route
         path="/products"
@@ -21,6 +38,7 @@ function App() {
         }
       />
 
+
       <Route
         path="/cart"
         element={
@@ -30,6 +48,7 @@ function App() {
         }
       />
 
+
       <Route
         path="/orders"
         element={
@@ -38,8 +57,25 @@ function App() {
           </PrivateRoute>
         }
       />
+
+
+      {/* ADMIN ROUTE */}
+
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <Admin />
+          </AdminRoute>
+        }
+      />
+
+
     </Routes>
+
   );
+
 }
+
 
 export default App;

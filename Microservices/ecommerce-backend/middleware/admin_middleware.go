@@ -11,13 +11,26 @@ func AdminMiddleware() gin.HandlerFunc {
 
 		role, exists := c.Get("role")
 		if !exists {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Role not found"})
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "Role not found",
+			})
 			c.Abort()
 			return
 		}
 
-		if role != "admin" {
-			c.JSON(http.StatusForbidden, gin.H{"error": "Admin access only"})
+		userRole, ok := role.(string)
+		if !ok {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "Invalid role",
+			})
+			c.Abort()
+			return
+		}
+
+		if userRole != "admin" {
+			c.JSON(http.StatusForbidden, gin.H{
+				"error": "Admin access only",
+			})
 			c.Abort()
 			return
 		}

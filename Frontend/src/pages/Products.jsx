@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Products.css";
+import Navbar from "../components/Navbar";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -24,22 +25,18 @@ export default function Products() {
   };
 
   return (
-    <div className="products-page">
-      <nav className="navbar">
-        <h2>Pacific</h2>
+  <>
+    <Navbar />
 
-        <div className="nav-links">
-          <a href="/products">Products</a>
-          <a href="/cart">Cart</a>
-          <a href="/orders">Orders</a>
-        </div>
-      </nav>
+    <div className="products-page">
 
       <h1 className="title">Products</h1>
 
       <div className="products-grid">
+
         {products.map((p) => (
           <div className="card" key={p.id}>
+
             <img
               src={
                 p.image_url ||
@@ -49,6 +46,7 @@ export default function Products() {
             />
 
             <div className="card-body">
+
               <h3>{p.name}</h3>
 
               <p className="category">
@@ -60,29 +58,46 @@ export default function Products() {
               </p>
 
               <div className="price-stock">
-                <span className="price">₹{p.price}</span>
+
+                <span className="price">
+                  ₹{p.price}
+                </span>
 
                 <span
                   className={
-                    p.stock > 0 ? "stock available" : "stock unavailable"
+                    p.stock > 0 
+                    ? "stock available" 
+                    : "stock unavailable"
                   }
                 >
-                  {p.stock > 0
+                  {
+                    p.stock > 0
                     ? `${p.stock} Available`
-                    : "Out of Stock"}
+                    : "Out of Stock"
+                  }
                 </span>
+
               </div>
 
               <button
                 disabled={p.stock === 0}
                 onClick={() => addToCart(p.id)}
               >
-                {p.stock > 0 ? "Add to Cart" : "Unavailable"}
+                {
+                  p.stock > 0 
+                  ? "Add to Cart" 
+                  : "Unavailable"
+                }
               </button>
+
             </div>
+
           </div>
         ))}
+
       </div>
+
     </div>
-  );
+  </>
+);
 }
